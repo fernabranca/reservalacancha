@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}
+Bienvenido a Reserva la Cancha
+{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css">
+{% endblock head%}
+
+{% block nav_links %}
+<ul class="nav navbar-nav">
+  <li class="active"><a href="#">Inicio</a></li>
+  <li><a href="#">Mis Reservas</a></li>
+</ul>
+{% endblock nav_links %}
+
+{% block nav_right %}
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">¡Hola Usuario! <span class="caret"></span></a>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="#">Cerrar Sesión</a></li>
+  </ul>
+</li>
+{% endblock nav_right %}
+{% block body %}
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=es"></script>
+
+<script>
+  var map = null;
+  var directionsDisplay = null;
+  var directionsService = null;
+  navigator.geolocation.getCurrentPosition(
+    function success(pos) {
+      var crd = pos.coords;
+      var mapOptions = {
+        center: new google.maps.LatLng(crd.latitude, crd.longitude),
+        zoom: 13,
+        scrollwheel:false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP};
+
+        var map = new google.maps.Map(document.getElementById("map"),mapOptions);    
+
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        directionsService = new google.maps.DirectionsService();
+
+        var request = {
+          origin: new google.maps.LatLng(crd.latitude, crd.longitude),
+          destination: new google.maps.LatLng(-27.451184, -58.979320),
+          travelMode: google.maps.TravelMode.DRIVING};
+
+          directionsService.route(request, function(response, status) {
+            directionsDisplay.setMap(map);
+            directionsDisplay.setDirections(response);
+          });
+        });
+      
+    </script>
+<div class="jumbotron center">  
+
+  <div class="row">
+    <div class="col-md-4">
+      <img id="imgCancha" src="{{ STATIC_URL }}img/prueba/cancha2.jpg">
+    </div>
+    <div class="col-md-8">
+      <h2>Cancha Sarmiento</h2>
+      <h4 class="data"><strong>Dirección:</strong> Av. Alvear 898</h4>
+      <h4 class="data"><strong>Teléfono:</strong> 03624885789</h4>
+      <h4 class="data"><strong>Precio:</strong>  $110</h4>
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-sm-4'>
+    </div>
+    <div class='col-sm-6'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+  </div>
+
+  <div class="row">
+    <div class='col-sm-4'>
+    </div>
+    <div class='col-sm-6'>
+          <h2>Turnos Disponibles</h2>
+
+          <table class='table table-hover'>
+          <thead>
+            <tr>
+              <th class="text-center">Hora de incio</th>
+              <th class="text-center">Hora de Fin</th>
+              <th class="text-center">Reservar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="success">
+              <td class="text-center">8.00 hs</td>
+              <td class="text-center">9.00 hs </td>
+              <td class="text-center"><a href="">Reservar</a></td>
+            </tr>
+            <tr>
+              <td class="text-center">10.00 hs</td>
+              <td class="text-center">11.00 hs </td>
+              <td class="text-center"><a href="">Reservar</a></td>
+            </tr>
+            <tr class="success">
+              <td class="text-center">15.00 hs</td>
+              <td class="text-center">16.00 hs </td>
+              <td class="text-center"><a href=""> Reservar</a></td>
+            </tr>
+            <tr>
+              <td class="text-center">18.00 hs</td>
+              <td class="text-center">19.00 hs </td>
+              <td class="text-center"><a href=""> Reservar</a></td>
+            </tr>
+            <tr class="success">
+              <td class="text-center">22.00 hs</td>
+              <td class="text-center">23.00 hs </td>
+              <td class="text-center"><a href=""> Reservar</a></td>
+            </tr>
+            <tr>
+              <td class="text-center">23.00 hs</td>
+              <td class="text-center">00.00 hs </td>
+              <td class="text-center"><a href=""> Reservar</a></td>
+            </tr>
+          </tbody>
+      </table>
+  </div>
+
+</div>
+  {% endblock body %}

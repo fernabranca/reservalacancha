@@ -1,0 +1,19 @@
+ #map{
+ 	height: 200px;
+ 	width: 95%;
+ }
+ .jumbotron{
+ 	padding-top: 0;
+ }
+
+ #imgCancha{
+ 	width: 100%;
+ 	height: auto;
+ 	border: 2px gray solid;
+ }
+
+.data{
+	width: auto;
+	float: left;
+	padding-right: 20px;
+}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+Busqueda
+{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/list.css">
+{% endblock head%}
+{% block nav_links %}
+<ul class="nav navbar-nav">
+	<li><a href="#">Inicio</a></li>
+	<li class="active"><a href="#">Mis Reservas</a></li>
+</ul>
+{% endblock nav_links %}
+
+{% block nav_right %}
+<li class="dropdown">
+	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">¡Hola Usuario! <span class="caret"></span></a>
+	<ul class="dropdown-menu" role="menu">
+		<li><a href="#">Cerrar Sesión</a></li>
+	</ul>
+</li>
+{% endblock nav_right %}
+
+{% block body %}
+<div class="jumbotron center">	
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 itemList">
+				<div class="col-md-6 element" >
+					<img src="{{ STATIC_URL }}img/prueba/cancha1.jpg">
+				</div>
+				<div class="col-md-6">
+					<h4>Cancha Sarmiento</h4>
+					<h4>Av. Alvear 898</h4>
+					<h4>Teléfono: 03624885789</h4>
+					<h4>Precio: $110</h4>
+					<h4>Fecha: 10/12/14</h4>
+					<h4>Hora: 8.00 hs a 9.00hs </h4>
+					<button class="btn btn-danger reservar" type="button">Cancelar Reserva</button>
+				</div>
+			</div>
+			<div class="col-md-6 itemList">
+				<div class="col-md-6 element" >
+					<img src="{{ STATIC_URL }}img/prueba/cancha2.jpg">
+				</div>
+				<div class="col-md-6">
+					<h4>Cancha Sarmiento</h4>
+					<h4>Av. Alvear 898</h4>
+					<h4>Teléfono: 03624885789</h4>
+					<h4>Precio: $110</h4>
+					<h4>Fecha: 09/12/14</h4>
+					<h4>Hora: 8.00 hs a 9.00hs </h4>
+					<button class="btn btn-danger reservar" type="button">Cancelar Reserva</button>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 itemList">
+				<div class="col-md-6 element" >
+					<img src="{{ STATIC_URL }}img/prueba/cancha3.jpg">
+				</div>
+				<div class="col-md-6">
+					<h4>Cancha Sarmiento</h4>
+					<h4>Av. Alvear 898</h4>
+					<h4>Teléfono: 03624885789</h4>
+					<h4>Precio: $110</h4>
+					<h4>Fecha: 10/11/14</h4>
+					<h4>Hora: 8.00 hs a 9.00hs </h4>
+				</div>
+			</div>
+			<div class="col-md-6 itemList">
+				<div class="col-md-6 element" >
+					<img src="{{ STATIC_URL }}img/prueba/cancha4.jpg">
+				</div>
+				<div class="col-md-6">
+					<h4>Cancha Sarmiento</h4>
+					<h4>Av. Alvear 898</h4>
+					<h4>Teléfono: 03624885789</h4>
+					<h4>Precio: $110</h4>
+					<h4>Fecha: 09/11/14</h4>
+					<h4>Hora: 8.00 hs a 9.00hs </h4>
+				</div>
+			</div>
+		</div>
+
+		
+	</div>
+</div>
+
+
+{% endblock body %}

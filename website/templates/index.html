@@ -1,7 +1,73 @@
 {% extends "base.html" %}
 {% block title %}
-	Bienvenido a Reserva la Cancha
+Bienvenido a Reserva la Cancha
 {% endblock title %}
+
+{% block head %}
+<style type="text/css" media="screen">
+  <!--
+  #map{height: 400px;}
+
+-->
+</style>  
+{% endblock head%}
+
+{% block nav_links %}
+{% endblock nav_links %}
+
+{% block nav_right %}
+<li>
+  <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+      Registrarse <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li><a href="#" title="Elija esta opción si desea alquilar canchas">Cliente</a></li>
+      <li><a href="#" title="Elija esta opción si desea promocionar sus canchas">Propietario</a></li>
+    </ul>
+  </div>
+  <button class="btn btn-primary navbar-btn">Iniciar sesi&oacute;n</button>
+</li>
+{% endblock nav_right%}
 {% block body %}
-<h1>HELLO WORLD!</h1>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=es&callback=iniciar"></script>
+
+<script>
+  function iniciar() {
+    var mapOptions = {
+      center: new google.maps.LatLng(-27.451384, -58.986691),
+      zoom: 13,
+      scrollwheel:false,
+      mapTypeId: google.maps.MapTypeId.ROADMAP};
+      var map = new google.maps.Map(document.getElementById("map"),mapOptions);    
+      var place = new google.maps.LatLng(-27.451384, -58.986691);
+      var marker = new google.maps.Marker({
+        position: place
+        , title: 'Plaza central'
+        , map: map
+        , });
+
+      var marker2 = new google.maps.Marker({
+        position: new google.maps.LatLng(-27.451184, -58.979320)
+        , title: 'UTN FRRe'
+        , map: map
+        , });
+}
+</script>
+
+<div id="map"></div>
+
+<div class="jumbotron center">
+  <div class="container">
+    <h2 class="text-center">¡Tenemos canchas en todo Resistencia, buscá tu deporte y comenzá a <strong>reservar!</strong></h2>
+    <div class="input-group">
+        <input type="search" class="form-control" placeholder="Ingresa el deporte a buscar. Por ejemplo: Futbol 11, Futbol 5, Basquet, Tenis, Golf, Paddle, etc.">
+        <span class="input-group-btn">
+          <button class="btn btn-primary" type="button">Buscar</button>
+        </span>
+    </div>
+
+
+  </div>
+</div>
 {% endblock body %}

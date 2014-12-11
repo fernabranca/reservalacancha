@@ -1,0 +1,32 @@
+.itemList{
+	margin-top: 5px;
+	padding: 0px;
+	-webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+}
+
+.itemList:hover{
+	background-color: #BDBDBD;
+	
+
+}
+
+.itemList img{
+	width: 100%;
+	height: auto;
+
+} 
+
+.itemList .element{
+	padding-left: 0px;
+}
+
+.itemList .descripcion{
+	float: left;
+
+}
+
+.itemList .reservar{
+	float: right;
+}
