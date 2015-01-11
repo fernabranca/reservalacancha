@@ -3,10 +3,12 @@ from django.template import RequestContext
 from website.models import Deporte, Cancha, Reserva
 
 def index(request):
-
+	user = request.user
 	canchas = Cancha.objects.all()
 
-	return render_to_response('index.html', {'canchas': canchas},
+	return render_to_response('index.html', 
+		{'canchas': canchas, 
+		'user': user},
         context_instance=RequestContext(request))
  
 

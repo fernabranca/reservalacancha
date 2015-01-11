@@ -72,18 +72,48 @@
 		      {% endblock nav_links %}
 		      <ul class="nav navbar-nav navbar-right">
 		      {% block nav_right %}
-		        <li><a href="#">Link</a></li>
-		        <li class="dropdown">
-		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-		          <ul class="dropdown-menu" role="menu">
-		            <li><a href="#">Action</a></li>
-		            <li><a href="#">Another action</a></li>
-		            <li><a href="#">Something else here</a></li>
-		            <li class="divider"></li>
-		            <li><a href="#">Separated link</a></li>
-		          </ul>
-		        </li>
-		        {% endblock nav_right %}
+		      {% if user.is_authenticated %}
+				<li>
+					<div class="dropdown">
+						<button class="btn btn-default dropdown-toggle navbar-btn" type="button" id="dropdownMenu1" data-toggle="dropdown">
+							{% if user.first_name %}
+								{{user.first_name}}
+							{% else %}
+								{{user.username}}
+							{% endif %}
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+							<li role="presentation">
+								<a role="menuitem" tabindex="-1" href="/password_change/">
+									Cambiar contrase&ntilde;a
+								</a>
+							</li>
+
+							<li role="presentation" class="divider"></li>
+							<li role="presentation">
+								<a role="menuitem" tabindex="-1" href="/logout">
+									Cerrar sesi&oacute;n
+								</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+				{% else %} 
+				<li>
+					<div class="btn-group">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							Registrarse <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#" title="Elija esta opción si desea alquilar canchas">Cliente</a></li>
+							<li><a href="#" title="Elija esta opción si desea promocionar sus canchas">Propietario</a></li>
+						</ul>
+					</div>
+					<button class="btn btn-primary navbar-btn">Iniciar sesi&oacute;n</button>
+				</li>
+				{% endif %}  
+		      {% endblock nav_right %}
 		      </ul>
 		    </div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
