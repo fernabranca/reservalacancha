@@ -39,19 +39,22 @@ Bienvenido a Reserva la Cancha
       zoom: 13,
       scrollwheel:false,
       mapTypeId: google.maps.MapTypeId.ROADMAP};
-      var map = new google.maps.Map(document.getElementById("map"),mapOptions);    
-      var place = new google.maps.LatLng(-27.451384, -58.986691);
-      var marker = new google.maps.Marker({
-        position: place
-        , title: 'Plaza central'
-        , map: map
-        , });
+      var map = new google.maps.Map(document.getElementById("map"),mapOptions);  
 
-      var marker2 = new google.maps.Marker({
-        position: new google.maps.LatLng(-27.451184, -58.979320)
-        , title: 'UTN FRRe'
-        , map: map
-        , });
+      new google.maps.Marker({
+          position: new google.maps.LatLng(-27.451384, -58.986691)
+          , title: '{{cancha.nombre}}'
+          , map: map
+          , });  
+      
+      {% for cancha in canchas %}
+          new google.maps.Marker({
+          position: new google.maps.LatLng({{cancha.latitud|stringformat:"f" }}, {{cancha.longitud|stringformat:"f"}})
+          , title: '{{cancha.nombre}}'
+          , map: map
+          , });
+
+      {% endfor %}
 }
 </script>
 
