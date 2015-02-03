@@ -6,17 +6,11 @@ Iniciar Sesion
 {% endblock nav_links %}
 
 {% block nav_right %}
-<li>
-	<div class="btn-group">
-		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-			Registrarse <span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li><a href="#" title="Elija esta opción si desea alquilar canchas">Cliente</a></li>
-			<li><a href="#" title="Elija esta opción si desea promocionar sus canchas">Propietario</a></li>
-		</ul>
+
+	<div >
+		<a class="btn btn-default navbar-btn" href="/register">Registrarse</a>
 	</div>
-</li>
+
 {% endblock nav_right%}
 {% block body %}
 
@@ -25,6 +19,9 @@ Iniciar Sesion
 		<h2>Iniciar Sesion</h2>
 		<form class="form-horizontal" role="form" method="post">
 			{% csrf_token %}
+			{% if form.errors %}
+				<span class="help-block">Disculpe, datos incorrectos.</span>
+			{% endif %}
 			<div class="form-group col-sm-6">
 				<label for="inputName" class="col-sm-4 control-label">Usuario:</label>
 				<div class="col-sm-8">

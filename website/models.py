@@ -37,6 +37,14 @@ class Cancha(models.Model):
 	def __unicode__(self):
 		return self.nombre
 
+	def get_open(self):
+
+		horas = [0 , 1 , 2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+		inicio = int(self.hora_comienzo_atencion)
+		fin = int(self.hora_fin_atencion)
+
+		return horas[inicio:fin]
+
 
 class Reserva(models.Model):
 
@@ -59,7 +67,7 @@ class Reserva(models.Model):
 	usuario = models.ForeignKey(User)
 
 	def __unicode__(self):
-		return 'Usuario: ' + self.usuario.username + ' - Fecha: ' + self.fecha.strftime("%Y-%m-%d")
+		return 'Usuario: ' + self.usuario.username + ' - Fecha: ' + self.fecha.strftime("%Y-%m-%d") + ' - Cancha: ' + self.cancha.nombre
 
 
 
