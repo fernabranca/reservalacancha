@@ -52,7 +52,11 @@
 		      {% if user.groups.all.0.name == 'Clientes' %}
 					<li><a href="/">Inicio</a></li>
 					<li><a href="/reservas">Mis Reservas</a></li>
-				
+			  {% elif user.groups.all.0.name == 'Propietarios' %}
+			  		<li><a href="/miscanchas">Mis canchas</a></li>
+					<li><a href="/misreservas">Moderar Reservas</a></li>
+					<li><a href="/moderarusuarios">Moderar usuarios</a></li>
+
 			  {% endif %}
 			  </ul>
 		     {% endblock nav_links %}
