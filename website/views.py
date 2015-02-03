@@ -7,6 +7,13 @@ from django.contrib.auth.models import Group
 import time
 from datetime import date
 from datetime import datetime
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+
+#saber si un usuario es cliente
+def is_client(user):
+    return user.groups.filter(name='Clientes').exists()
+
 
 #pagina principal
 def index(request):
@@ -53,6 +60,10 @@ def search(request):
 		'q': query}, 
 		context_instance=RequestContext(request))
 
+
+#detalle de una determinada cancha para una determinada fecha
+@login_required(login_url='/login/')
+@user_passes_test(is_client)
 def detail(request):
 	user = request.user
 	id_cancha = request.GET.get('id', '-1')
@@ -85,6 +96,9 @@ def detail(request):
 		'fecha_actual': time.strftime("%Y-%m-%d")},
         context_instance=RequestContext(request))
 
+#crea reserva a una determinada cancha
+@login_required(login_url='/login/')
+@user_passes_test(is_client)
 def reserve(request):
 
 	fecha = request.POST['fecha'].split('-')
@@ -107,6 +121,10 @@ def reserve(request):
 
 	return redirect('/reservas')
 
+#visualizar reservas
+#crea reserva a una determinada cancha
+@login_required(login_url='/login/')
+@user_passes_test(is_client)
 def my_reserves(request):
 	
 	user = request.user
@@ -118,6 +136,11 @@ def my_reserves(request):
 		'today': datetime.now()},
 		context_instance=RequestContext(request))		
 
+
+#moderar reservas
+#crea reserva a una determinada cancha
+@login_required(login_url='/login/')
+@user_passes_test(is_client)
 def moderate_reserve(request):
 	
 	id_reserva = request.POST.get('id_reserva', '-1')
