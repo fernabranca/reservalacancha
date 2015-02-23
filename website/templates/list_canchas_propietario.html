@@ -1,0 +1,18 @@
+{% extends "list.html" %}
+
+{% block search %}
+<div class="jumbotron center" style="padding-bottom: 0;" >
+	
+
+		<a class="btn btn-info col-xs-offset-1" href="/cancha/crearcancha/"><span class="glyphicon glyphicon-plus"></span> Crear Cancha</a>
+	
+</div>
+{% endblock search %}
+{% block buttons_cancha %}
+<a class="btn btn-success reservar" href="/modificar/?id={{result.pk}}">Modificar</a>
+<form id="form_eliminar_{{result.pk}}" role="form" action="/cancha/eliminar/" method="post">
+	{% csrf_token %}
+	<input name="id_cancha" type="hidden" value="{{result.pk}}">
+	<button class="btn btn-danger reservar" style="margin-right: 5px;" type="submit">Eliminar</button>
+</form>
+{% endblock buttons_cancha %}

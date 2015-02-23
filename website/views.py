@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from website.models import Deporte, Cancha, Reserva
-from forms import UserForm
+from forms import UserForm, CanchaForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import Group
 import time
@@ -14,9 +14,14 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 def is_client(user):
     return user.groups.filter(name='Clientes').exists()
 
+def is_propiertario(user):
+    return user.groups.filter(name='Propietarios').exists()
 
 #pagina principal
 def index(request):
+
+	if is_propiertario(request.user):
+		return redirect("/miscanchas")
 	user = request.user
 	canchas = Cancha.objects.all()
 
@@ -54,7 +59,7 @@ def search(request):
 		if deporte:
 			results = Cancha.objects.filter(deporte=deporte)
 
-	return render_to_response('list.html',
+	return render_to_response('list_canchas_cliente.html',
 		{'results': results, 
 		'user': user,
 		'q': query}, 
@@ -62,8 +67,6 @@ def search(request):
 
 
 #detalle de una determinada cancha para una determinada fecha
-@login_required(login_url='/login/')
-@user_passes_test(is_client)
 def detail(request):
 	user = request.user
 	id_cancha = request.GET.get('id', '-1')
@@ -122,10 +125,9 @@ def reserve(request):
 	return redirect('/reservas')
 
 #visualizar reservas
-#crea reserva a una determinada cancha
 @login_required(login_url='/login/')
 @user_passes_test(is_client)
-def my_reserves(request):
+def my_reserves_client(request):
 	
 	user = request.user
 	reservas = Reserva.objects.filter(usuario=user).order_by('-id')
@@ -138,14 +140,80 @@ def my_reserves(request):
 
 
 #moderar reservas
-#crea reserva a una determinada cancha
 @login_required(login_url='/login/')
-@user_passes_test(is_client)
 def moderate_reserve(request):
 	
-	id_reserva = request.POST.get('id_reserva', '-1')
-	reserva = get_object_or_404(Reserva, pk=id_reserva)
-	reserva.estado = request.POST.get('estado')
-	reserva.save()
+	user = request.user
 
-	return redirect('/reservas')
+	if is_client(user) or is_propiertario(user):
+		id_reserva = request.POST.get('id_reserva', '-1')
+		reserva = get_object_or_404(Reserva, pk=id_reserva)
+		reserva.estado = request.POST.get('estado')
+		reserva.save()
+
+	if is_client(user):
+		return redirect('/reservas')
+	elif is_propiertario(user):
+		return redirect('/reservaspropietario')
+
+#muestra las canchas de un propietario
+@login_required(login_url='/login/')
+@user_passes_test(is_propiertario)
+def mis_canchas(request):
+
+	user = request.user
+	canchas = Cancha.objects.filter(duenio=user).order_by('-id')
+
+	return render_to_response('list_canchas_propietario.html',
+		{'results': canchas,
+		'user': user,
+		'today': datetime.now()},
+		context_instance=RequestContext(request))
+
+
+#elimina la cancha de un propietario		
+@login_required(login_url='/login/')
+@user_passes_test(is_propiertario)
+def eliminar_cancha(request):
+
+	user = request.user
+	id_cancha = request.POST.get('id_cancha', '-1')
+	cancha = get_object_or_404(Cancha, pk=id_cancha)
+
+	if cancha.duenio == user:
+		cancha.delete()
+
+	return redirect('/mis_canchas')
+
+#visualizar reservas para un propietario
+@login_required(login_url='/login/')
+@user_passes_test(is_propiertario)
+def my_reserves_propietary(request):
+	
+	user = request.user
+	canchas_propietario = Cancha.objects.filter(duenio=user)
+
+	reservas = Reserva.objects.filter(cancha__in=canchas_propietario).order_by('-id')
+
+	return render_to_response('list_reserves_propietario.html',
+		{'results': reservas,
+		'user': user,
+		'today': datetime.now()},
+		context_instance=RequestContext(request))
+
+
+#Creacion canchas
+def crear_cancha(request):
+
+	if request.method == 'POST':
+		form = CanchaForm(request.POST, request.FILES)
+		if form.is_valid():
+			c = form.save()
+			return HttpResponseRedirect('/')
+	else:
+		form = CanchaForm(initial={'duenio': request.user})
+		
+	
+	return render_to_response('create_cancha.html', 
+		{'form': form},
+		context_instance=RequestContext(request))

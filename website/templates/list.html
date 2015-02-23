@@ -9,6 +9,7 @@ Reserva la cancha
 {% endblock head%}
 
 {% block body %}
+{% block search %}
 <div class="jumbotron center">
 	<div class="container">
 		<form class="form-horizontal" role="form" action="/search" method="get">
@@ -24,6 +25,7 @@ Reserva la cancha
 
 	</div>
 </div>
+{% endblock search %}
 <div class="jumbotron center">	
 	<div class="container">
 		<div class="row">
@@ -36,7 +38,9 @@ Reserva la cancha
 					<h4>{{result.nombre}}</h4>
 					<h4>{{result.direccion}}</h4>
 					<h4>Precio: {{result.precio_por_turno}}</h4>
-					<a class="btn btn-success reservar" href="/cancha/?id={{result.pk}}">Reservar</a>
+					{% block buttons_cancha %}
+					
+					{% endblock buttons_cancha %}
 				</div>
 			</div>
 

@@ -1,6 +1,7 @@
 from django import forms
-from django.forms import PasswordInput, TextInput
+from django.forms import PasswordInput, TextInput, HiddenInput
 from django.contrib.auth.models import User
+from website.models import Cancha
 
 
 class UserForm(forms.ModelForm): 
@@ -15,3 +16,10 @@ class UserForm(forms.ModelForm):
          widgets = {
             'password': PasswordInput()
         	} 
+
+class CanchaForm(forms.ModelForm): 
+    class Meta: 
+         model =  Cancha
+         widgets = {
+            'duenio': HiddenInput()
+         }

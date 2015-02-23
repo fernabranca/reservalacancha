@@ -12,8 +12,12 @@ urlpatterns = patterns('',
     url(r'^search/$', 'website.views.search'),
     url(r'^cancha/$', 'website.views.detail'),
     url(r'^reservar/$', 'website.views.reserve'),
-    url(r'^reservas/$', 'website.views.my_reserves'),
+    url(r'^reservas/$', 'website.views.my_reserves_client'),
+    url(r'^reservaspropietario/$' , 'website.views.my_reserves_propietary'),
     url(r'^moderar/$', 'website.views.moderate_reserve'),
+    url(r'^miscanchas/$', 'website.views.mis_canchas'),
+    url(r'^cancha/eliminar/$', 'website.views.eliminar_cancha'),
+    url(r'^cancha/crearcancha/$', 'website.views.crear_cancha'),
     #admin urls
     url(r'^admin/', include(admin.site.urls)),
     #auth urls
