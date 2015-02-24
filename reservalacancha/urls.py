@@ -18,11 +18,13 @@ urlpatterns = patterns('',
     url(r'^miscanchas/$', 'website.views.mis_canchas'),
     url(r'^cancha/eliminar/$', 'website.views.eliminar_cancha'),
     url(r'^cancha/crearcancha/$', 'website.views.crear_cancha'),
+    url(r'^cancha/modificar/(?P<id_cancha>\d+)$', 'website.views.modificar_cancha'),
     #admin urls
     url(r'^admin/', include(admin.site.urls)),
     #auth urls
     url(r'^login/$', login),
 	url(r'^logout/$', logout, {'next_page': '/'}),
+
 
 )
 

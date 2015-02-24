@@ -203,6 +203,8 @@ def my_reserves_propietary(request):
 
 
 #Creacion canchas
+@login_required(login_url='/login/')
+@user_passes_test(is_propiertario)
 def crear_cancha(request):
 
 	if request.method == 'POST':
@@ -215,5 +217,23 @@ def crear_cancha(request):
 		
 	
 	return render_to_response('create_cancha.html', 
+		{'form': form},
+		context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@user_passes_test(is_propiertario)
+def modificar_cancha(request, id_cancha):
+
+	cancha = get_object_or_404(Cancha, pk=id_cancha)
+
+	if request.method == 'POST':
+		form = CanchaForm(request.POST, request.FILES, instance=cancha)
+		if form.is_valid():
+			c = form.save()
+			return HttpResponseRedirect('/')
+	else:
+		form = CanchaForm(instance=cancha)
+	
+	return render_to_response('edit_cancha.html', 
 		{'form': form},
 		context_instance=RequestContext(request))

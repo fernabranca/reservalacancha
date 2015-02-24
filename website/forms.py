@@ -21,5 +21,9 @@ class CanchaForm(forms.ModelForm):
     class Meta: 
          model =  Cancha
          widgets = {
-            'duenio': HiddenInput()
+            'duenio': HiddenInput(),
+            'direccion': HiddenInput(),
+            'latitud': HiddenInput(),
+            'longitud': HiddenInput()
+
          }

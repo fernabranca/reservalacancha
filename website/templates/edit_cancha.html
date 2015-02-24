@@ -59,7 +59,7 @@
 }
 
     </style>
-    <title>Crear Cancha</title>
+    <title>Modificar Cancha</title>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
     <script>
 // This example adds a search box to a map, using the Google Place Autocomplete
@@ -130,9 +130,6 @@ function initialize() {
       texto_direccion.value = document.getElementById('pac-input').value;
       latitud_direccion.value = place.geometry.location.lat();
       longitud_direccion.value = place.geometry.location.lng();
-      
-      console.log(place.geometry.location.lat());
-      console.log(place.geometry.location.lng());
       markers.push(marker);
 
       bounds.extend(place.geometry.location);
@@ -166,22 +163,21 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 <div class="jumbotron">
 	<div class="container">
-		<h2>Nueva Cancha</h2>
+		<h2>Modificar Cancha</h2>
     <h5><strong>Ingrese la dirección de su cancha</strong></h5>
     <h5>Ingresela de la forma Calle Altura, Ciudad, Provincia, País</h5>
     <h5>Ejemplo: Av 9 de Julio 555, Resistencia, Chaco, Argentina</h5>
     <h5>Verifique que el punto en el mapa corresponda a la ubicación de su cancha para evitar confusiones con sus clientes</h5>
-    <input id="pac-input" class="controls" type="text" placeholder="Ingrese la dirección">
+    <input id="pac-input" class="controls" type="text" placeholder="Ingrese la dirección" value="{{form.direccion.value}}">
     <div id="map-canvas"></div>
 		<form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" id="registerForm">
 			{% csrf_token %}
 			{% load bootstrap %}
 			{{ form|bootstrap_horizontal }}
 
-
 			<div class="form-group">
 				<div class="col-sm-offset-10 col-sm-2">
-					<button id="sendB" type="submit" class="btn btn-primary">Crear</button>
+					<button id="sendB" type="submit" class="btn btn-primary">Modificar</button>
 				</div>
 			</div>
 		</form>

@@ -9,7 +9,7 @@
 </div>
 {% endblock search %}
 {% block buttons_cancha %}
-<a class="btn btn-success reservar" href="/modificar/?id={{result.pk}}">Modificar</a>
+<a class="btn btn-success reservar" href="/cancha/modificar/{{result.pk}}">Modificar</a>
 <form id="form_eliminar_{{result.pk}}" role="form" action="/cancha/eliminar/" method="post">
 	{% csrf_token %}
 	<input name="id_cancha" type="hidden" value="{{result.pk}}">
