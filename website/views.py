@@ -67,6 +67,8 @@ def search(request):
 
 
 #detalle de una determinada cancha para una determinada fecha
+@login_required(login_url='/login/')
+@user_passes_test(is_client)
 def detail(request):
 	user = request.user
 	id_cancha = request.GET.get('id', '-1')
