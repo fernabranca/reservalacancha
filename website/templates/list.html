@@ -28,6 +28,7 @@ Reserva la cancha
 {% endblock search %}
 <div class="jumbotron center">	
 	<div class="container">
+		{% if results%}
 		<div class="row">
 		{% for result in results %}
 			<div class="col-md-6 itemList">
@@ -50,7 +51,9 @@ Reserva la cancha
                         {% endif %}
                         {% endfor %}
         </div>
-			
+		{% else %}
+			<h1 style="text-align: center;">Lo sentimos, no hay nada aquí</h1>	
+		{%endif%}
 	</div>
 
 </div>
