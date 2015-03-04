@@ -1,3 +1,4 @@
+#encoding:utf-8
 from django import forms
 from django.forms import PasswordInput, TextInput, HiddenInput
 from django.contrib.auth.models import User
@@ -24,6 +25,13 @@ class UserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
+        if email and User.objects.filter(email=email).exclude(username=username).count():
+            raise forms.ValidationError(u'La dirección de correo ya existe. La misma debe ser única')
+        return email
 
 class CanchaForm(forms.ModelForm): 
     class Meta: 
