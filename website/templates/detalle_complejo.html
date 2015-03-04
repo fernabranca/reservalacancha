@@ -1,0 +1,7 @@
+{% extends "list.html" %}
+{% block search%}
+<h1 align="center">Canchas del complejo {{complejo.nombre}}</h1>
+{% endblock search%}
+{% block buttons_cancha %}
+<a class="btn btn-success reservar" href="/cancha/?id={{result.pk}}">Reservar</a>
+{% endblock buttons_cancha %}

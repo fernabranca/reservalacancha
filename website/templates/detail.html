@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-{{cancha.nombre}}
+Detalle Cancha
 {% endblock title %}
 
 {% block head %}
@@ -30,7 +30,7 @@
 
         var request = {
           origin: new google.maps.LatLng(crd.latitude, crd.longitude),
-          destination: new google.maps.LatLng({{cancha.latitud|stringformat:"f" }}, {{cancha.longitud|stringformat:"f"}}),
+          destination: new google.maps.LatLng({{cancha.complejo.latitud|stringformat:"f" }}, {{cancha.complejo.longitud|stringformat:"f"}}),
           travelMode: google.maps.TravelMode.DRIVING};
 
           directionsService.route(request, function(response, status) {
@@ -47,9 +47,11 @@
       <img id="imgCancha" src="{{cancha.imagen.url}}">
     </div>
     <div class="col-md-8">
-      <h2>{{cancha.nombre}}</h2>
-      <h4 class="data"><strong>Dirección:</strong> {{cancha.direccion}}</h4>
+      <h2><strong>Complejo: </strong> {{cancha.complejo.nombre}}</h2>
+       <h4 class="data"><strong>Deporte:</strong> {{cancha.deporte.nombre}}</h4>
+      <h4 class="data"><strong>Cancha:</strong> {{cancha.numero_cancha}}</h4>
       <h4 class="data"><strong>Precio:</strong>  ${{cancha.precio_por_turno}}</h4>
+      <h4 class="data"><strong>Dirección:</strong> {{cancha.complejo.direccion}}</h4>
       <div id="map"></div>
     </div>
   </div>

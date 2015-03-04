@@ -17,8 +17,10 @@ urlpatterns = patterns('',
     url(r'^moderar/$', 'website.views.moderate_reserve'),
     url(r'^miscanchas/$', 'website.views.mis_canchas'),
     url(r'^cancha/eliminar/$', 'website.views.eliminar_cancha'),
-    url(r'^cancha/crearcancha/$', 'website.views.crear_cancha'),
+    url(r'^cancha/crear/$', 'website.views.crear_cancha'),
     url(r'^cancha/modificar/(?P<id_cancha>\d+)$', 'website.views.modificar_cancha'),
+    url(r'^complejo/crear/$', 'website.views.crear_complejo'),
+    url(r'^complejo/(?P<id_complejo>\d+)$', 'website.views.detalle_complejo'),
     #admin urls
     url(r'^admin/', include(admin.site.urls)),
     #auth urls

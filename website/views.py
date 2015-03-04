@@ -1,14 +1,15 @@
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
-from website.models import Deporte, Cancha, Reserva
-from forms import UserForm, CanchaForm
+from website.models import Deporte, Cancha, Reserva, Complejo
+from forms import UserForm, CanchaForm, ComplejoForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import Group
 import time
 from datetime import date
 from datetime import datetime
 from django.contrib.auth.decorators import login_required, user_passes_test
-
+from django.contrib.auth import authenticate, login 
+from django.contrib import messages
 
 #saber si un usuario es cliente
 def is_client(user):
@@ -23,10 +24,10 @@ def index(request):
 	if is_propiertario(request.user):
 		return redirect("/miscanchas")
 	user = request.user
-	canchas = Cancha.objects.all()
+	complejos = Complejo.objects.all()
 
 	return render_to_response('index.html', 
-		{'canchas': canchas, 
+		{'complejos': complejos, 
 		'user': user},
         context_instance=RequestContext(request))
  
@@ -41,6 +42,11 @@ def register(request):
 			u = form.save()
 			g = Group.objects.get(name=group) 
 			g.user_set.add(u)
+
+			u = authenticate(username=request.POST['username'],
+				password=request.POST['password'])
+			login(request, u)
+
 			return HttpResponseRedirect('/')
 	else:
 		form = UserForm()
@@ -115,6 +121,7 @@ def reserve(request):
 	cancha = get_object_or_404(Cancha, pk=id_cancha)
 	user = request.user
 	
+	messages.info(request, "Tu reserva fue realizada con exito")
 	reserva = Reserva(
 		hora=hora,
 		fecha=fecha,
@@ -152,6 +159,7 @@ def moderate_reserve(request):
 		reserva = get_object_or_404(Reserva, pk=id_reserva)
 		reserva.estado = request.POST.get('estado')
 		reserva.save()
+		messages.info(request, "Haz cambiado el estado de la reserva exitosamente")
 
 	if is_client(user):
 		return redirect('/reservas')
@@ -164,10 +172,12 @@ def moderate_reserve(request):
 def mis_canchas(request):
 
 	user = request.user
-	canchas = Cancha.objects.filter(duenio=user).order_by('-id')
+	complejos = Complejo.objects.filter(duenio=user)
+	results = Cancha.objects.filter(complejo=complejos).order_by('-id')
 
-	return render_to_response('list_canchas_propietario.html',
-		{'results': canchas,
+	return render_to_response('list_canchas_propietario_1.html',
+		{'results': results,
+		'complejos': complejos,
 		'user': user,
 		'today': datetime.now()},
 		context_instance=RequestContext(request))
@@ -182,10 +192,10 @@ def eliminar_cancha(request):
 	id_cancha = request.POST.get('id_cancha', '-1')
 	cancha = get_object_or_404(Cancha, pk=id_cancha)
 
-	if cancha.duenio == user:
+	if cancha.complejo.duenio == user:
 		cancha.delete()
 
-	return redirect('/mis_canchas')
+	return redirect('/miscanchas')
 
 #visualizar reservas para un propietario
 @login_required(login_url='/login/')
@@ -193,7 +203,8 @@ def eliminar_cancha(request):
 def my_reserves_propietary(request):
 	
 	user = request.user
-	canchas_propietario = Cancha.objects.filter(duenio=user)
+	complejos = Complejo.objects.filter(duenio=request.user)
+	canchas_propietario = Cancha.objects.filter(complejo__in=complejos)
 
 	reservas = Reserva.objects.filter(cancha__in=canchas_propietario).order_by('-id')
 
@@ -215,8 +226,8 @@ def crear_cancha(request):
 			c = form.save()
 			return HttpResponseRedirect('/')
 	else:
-		form = CanchaForm(initial={'duenio': request.user})
-		
+		form = CanchaForm()
+		form.fields["complejo"].queryset = Complejo.objects.filter(duenio=request.user)	
 	
 	return render_to_response('create_cancha.html', 
 		{'form': form},
@@ -235,7 +246,41 @@ def modificar_cancha(request, id_cancha):
 			return HttpResponseRedirect('/')
 	else:
 		form = CanchaForm(instance=cancha)
+		form.fields["complejo"].queryset = Complejo.objects.filter(duenio=request.user)	
+
 	
 	return render_to_response('edit_cancha.html', 
 		{'form': form},
 		context_instance=RequestContext(request))
+
+
+@login_required(login_url='/login/')
+@user_passes_test(is_propiertario)
+def crear_complejo(request):
+
+	if request.method == 'POST':
+		form = ComplejoForm(request.POST)
+		if form.is_valid():
+			c = form.save()
+			return HttpResponseRedirect('/')
+	else:
+		form = ComplejoForm(initial={'duenio': request.user})		
+	
+	return render_to_response('create_complejo.html', 
+		{'form': form},
+		context_instance=RequestContext(request))
+
+def detalle_complejo(request, id_complejo):
+
+	complejo = get_object_or_404(Complejo, pk=id_complejo)
+	results = Cancha.objects.filter(complejo=complejo)
+
+	return render_to_response('detalle_complejo.html',
+		{'results': results,
+		'complejo': complejo, 
+		'user': request.user,
+		}, 
+		context_instance=RequestContext(request))
+
+
+

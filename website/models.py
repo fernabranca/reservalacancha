@@ -9,6 +9,17 @@ class Deporte(models.Model):
 	def __unicode__(self):
 		return self.nombre
 
+class Complejo(models.Model):
+
+	nombre = models.CharField(max_length=50)
+	direccion = models.CharField(max_length=100)
+	latitud = models.FloatField(null=True, blank=True)
+	longitud = models.FloatField(null=True, blank=True)
+	duenio = models.ForeignKey(User)
+
+	def __unicode__(self):
+		return self.nombre
+
 class Cancha(models.Model):
 
 	#tupla para manejar los horarios
@@ -23,19 +34,29 @@ class Cancha(models.Model):
 		('21','21.00 hs'), ('22','22.00 hs'), ('23','23.00 hs'),
 	)
 
-	nombre = models.CharField(max_length=50)
-	direccion = models.CharField(max_length=100)
-	latitud = models.FloatField(null=True, blank=True)
-	longitud = models.FloatField(null=True, blank=True)
 	hora_comienzo_atencion = models.CharField(max_length=4,choices=hora_opciones)
 	hora_fin_atencion = models.CharField(max_length=4,choices=hora_opciones)
 	precio_por_turno = models.FloatField()
 	imagen =  models.ImageField(upload_to='canchas', verbose_name='Imágen')
 	deporte = models.ForeignKey(Deporte)
-	duenio = models.ForeignKey(User)
+	complejo = models.ForeignKey(Complejo)
+	numero_cancha = models.IntegerField(blank=True, null=True)
+
+	def save(self, *args, **kwargs):
+
+		if not self.pk:
+			no = Cancha.objects.filter(complejo=self.complejo, deporte=self.deporte).count()
+			if no == None:
+				self.numero_cancha = 1
+			else:
+				self.numero_cancha = no + 1
+
+		super(Cancha, self).save(*args, **kwargs)
+
+	
 
 	def __unicode__(self):
-		return self.nombre
+		return 'Complejo: ' + self.complejo.nombre + ' - Deporte: ' + self.deporte.nombre + ' - Cancha: ' + str(self.numero_cancha)
 
 	def get_open(self):
 

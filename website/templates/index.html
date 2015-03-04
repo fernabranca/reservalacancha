@@ -30,12 +30,12 @@ function loadURL(marker) {
       mapTypeId: google.maps.MapTypeId.ROADMAP};
       var map = new google.maps.Map(document.getElementById("map"),mapOptions);  
       
-      {% for cancha in canchas %}
+      {% for complejo in complejos %}
         var marker =  new google.maps.Marker({
-          position: new google.maps.LatLng({{cancha.latitud|stringformat:"f" }}, {{cancha.longitud|stringformat:"f"}})
-          , title: '{{cancha.nombre}}'
+          position: new google.maps.LatLng({{complejo.latitud|stringformat:"f" }}, {{complejo.longitud|stringformat:"f"}})
+          , title: '{{complejo.nombre}}'
           , map: map
-          , url: 'cancha/?id={{cancha.pk}}'
+          , url: 'complejo/{{complejo.pk}}'
           , });
         google.maps.event.addListener(marker, 'click', loadURL(marker));
       {% endfor %}

@@ -36,9 +36,11 @@ Reserva la cancha
 					<img src="{{ result.imagen.url }}">
 				</div>
 				<div class="col-md-6">
-					<h4>{{result.nombre}}</h4>
-					<h4>{{result.direccion}}</h4>
-					<h4>Precio: {{result.precio_por_turno}}</h4>
+					<h4><strong>Complejo: </strong> {{result.complejo.nombre}}</h4>
+					<h4><strong>Direccion: </strong> {{result.complejo.direccion}}</h4>
+					<h4><strong>Deporte: </strong> {{result.deporte.nombre}}</h4>
+					<h4><strong>Cancha: </strong> {{result.numero_cancha}}</h4>
+					<h4><strong> Precio: </strong>{{result.precio_por_turno}}</h4>
 					{% block buttons_cancha %}
 					
 					{% endblock buttons_cancha %}
@@ -52,7 +54,10 @@ Reserva la cancha
                         {% endfor %}
         </div>
 		{% else %}
-			<h1 style="text-align: center;">Lo sentimos, no hay nada aquí</h1>	
+		
+			<h1 style="text-align: center;">{% block empty %}Lo sentimos, no hay nada aquí{% endblock empty %}</h1>
+
+		
 		{%endif%}
 	</div>
 

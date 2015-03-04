@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import PasswordInput, TextInput, HiddenInput
 from django.contrib.auth.models import User
-from website.models import Cancha
+from website.models import Cancha, Complejo
 
 
 class UserForm(forms.ModelForm): 
@@ -29,9 +29,15 @@ class CanchaForm(forms.ModelForm):
     class Meta: 
          model =  Cancha
          widgets = {
-            'duenio': HiddenInput(),
+            'numero_cancha': HiddenInput()
+         }
+
+class ComplejoForm(forms.ModelForm):
+    class Meta:
+        model = Complejo
+        widgets = {
             'direccion': HiddenInput(),
             'latitud': HiddenInput(),
-            'longitud': HiddenInput()
-
+            'longitud': HiddenInput(),
+            'duenio': HiddenInput()
          }

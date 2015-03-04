@@ -11,6 +11,17 @@ Reservas
 <div class="jumbotron center">
 
 	<div class="container">
+
+		  {% if messages %}
+ 
+      {% for message in messages %}
+        <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <strong>{{message}}</strong>
+      </div>
+      {% endfor %}
+
+  		{% endif %}
 		<div class="row">
 		{% for result in results %}
 			<div class="col-md-6 itemList">
@@ -18,12 +29,16 @@ Reservas
 					<img src="{{ result.cancha.imagen.url }}">
 				</div>
 				<div class="col-md-6">
-					<h4>{{result.cancha.nombre}}</h4>
-					<h4>{{result.cancha.direccion}}</h4>
-					<h4>Fecha: {{result.fecha}}</h4>
-					<h4>Usuario: {{result.usuario.username}}</h4>
-					<h4>Hora: {{result.hora}}:00hs</h4>
-					<h4>Estado: {{result.estado}}</h4>
+					<h4><strong>Complejo: </strong> {{result.cancha.complejo.nombre}}</h4>
+					<h4><strong>Direccion: </strong> {{result.cancha.complejo.direccion}}</h4>
+					<h4><strong>Deporte: </strong> {{result.cancha.deporte.nombre}}</h4>
+					<h4><strong>Cancha: </strong> {{result.cancha.numero_cancha}}</h4>
+					<h4><strong> Precio: </strong>{{result.cancha.precio_por_turno}}</h4>
+					<h4><strong>Fecha: </strong>{{result.fecha}}</h4>
+					<h4><strong>Hora: </strong>{{result.hora}}:00hs</h4>
+					<h4><strong> Estado: </strong> {{result.estado}}</h4>
+					<h4><strong> Cliente: </strong>{{result.usuario.username}}</h4>
+					
 					{% if result.fecha.day >= today.day and result.fecha.month >= today.month and result.fecha.year >= today.year %}
 							{% ifequal result.estado 'Pendiente de aprobacion' %}
 							<form id="form_aceptar_reserva_{{result.pk}}" role="form" action="/moderar/" method="post">

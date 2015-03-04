@@ -7,6 +7,12 @@
 		<a class="btn btn-info col-xs-offset-1" href="/cancha/crearcancha/"><span class="glyphicon glyphicon-plus"></span> Crear Cancha</a>
 	
 </div>
+
+{% for complejo in complejos %}
+	{% for cancha in complejo.cancha_set.all %}
+		{{ cancha.precio_por_turno }}
+	{% endfor %}
+{% endfor %}
 {% endblock search %}
 {% block buttons_cancha %}
 <a class="btn btn-success reservar" href="/cancha/modificar/{{result.pk}}">Modificar</a>
@@ -16,3 +22,5 @@
 	<button class="btn btn-danger reservar" style="margin-right: 5px;" type="submit">Eliminar</button>
 </form>
 {% endblock buttons_cancha %}
+
+{% block empty %}Comenzá a crear tus canchas{% endblock empty %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}
+Reserva la cancha
+{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/list.css">
+{% endblock head%}
+
+{% block body %}
+
+<div class="jumbotron center" style="padding-bottom: 0;" >
+	<div class="container">
+		<a class="btn btn-info" href="/complejo/crear/"><span class="glyphicon glyphicon-plus"></span> Crear Complejo</a>
+
+		{% if complejos %}
+		<a class="btn btn-info" href="/cancha/crear/"><span class="glyphicon glyphicon-plus"></span> Crear Cancha</a>
+		{% endif %}
+	</div>
+
+</div>
+
+<div class="jumbotron center">
+	
+	{% if complejos%}
+	{% for complejo in complejos %}	
+	<div class="container">
+	<h2 class="text-center"><strong>Complejo: </strong>{{complejo.nombre}}</h2>
+	<h2>Canchas del complejo:</h2>
+		<div class="row">
+		{% if complejo.cancha_set.all %}
+
+				{% for result in complejo.cancha_set.all %}
+					<div class="col-md-6 itemList">
+						<div class="col-md-6 element" >
+							<img src="{{ result.imagen.url }}">
+						</div>
+						<div class="col-md-6">
+						
+							<h4><strong>Deporte: </strong> {{result.deporte.nombre}}</h4>
+							<h4><strong>Cancha: </strong> {{result.numero_cancha}}</h4>
+							<h4><strong> Precio: </strong>{{result.precio_por_turno}}</h4>
+
+							<a class="btn btn-success reservar" href="/cancha/modificar/{{result.pk}}">Modificar</a>
+							<form id="form_eliminar_{{result.pk}}" role="form" action="/cancha/eliminar/" method="post">
+								{% csrf_token %}
+								<input name="id_cancha" type="hidden" value="{{result.pk}}">
+								<button class="btn btn-danger reservar" style="margin-right: 5px;" type="submit">Eliminar</button>
+							</form>
+						</div>
+					</div>
+
+					{% if forloop.counter|divisibleby:2 %}
+					</div>
+		            <div class="row">
+		            {% endif %}
+		        {% endfor %}
+        			</div>
+        	</div>
+        {% else %}
+
+        <div class="alert alert-info alert-dismissible" role="alert">
+            
+            <h3 style="text-align: center;">Este complejo aún no tiene canchas. Puede agregarlas haciendo click en "Crear Cancha"</h3>
+     	</div>	
+		{% endif %}
+        {% endfor %}
+		{% else %}
+		<div class="container">
+		<div class="alert alert-info alert-dismissible" role="alert">
+            <h3 style="text-align: center;">¡Aún no tienes complejos! Comienza creando uno.</h3>
+     	</div>
+     	</div>
+		
+		{%endif%}
+	</div>
+
+</div>
+{% endblock body %}
