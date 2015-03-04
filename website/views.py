@@ -2,7 +2,7 @@
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from website.models import Deporte, Cancha, Reserva, Complejo
-from forms import UserForm, CanchaForm, ComplejoForm
+from forms import UserForm, CanchaForm, ComplejoForm, RecoveryForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import Group
 import time
@@ -12,6 +12,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login 
 from django.contrib import messages
 from django.core.mail import EmailMessage
+from django.contrib.auth.models import User
+import string
+import random
 
 #saber si un usuario es cliente
 def is_client(user):
@@ -337,4 +340,38 @@ def detalle_complejo(request, id_complejo):
 		context_instance=RequestContext(request))
 
 
+def recovery(request):
 
+	if request.method == 'POST':
+		form = RecoveryForm(request.POST)
+		if form.is_valid():
+			try:
+				user = User.objects.get(username=form.data["usuario"])
+
+			except Exception, e:
+				messages.info(request, "El usuario ingresado no existe")
+				return HttpResponseRedirect('/recuperar')
+			
+			new_pass = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+			user.set_password(new_pass)
+			user.save()
+
+			body = 'Haz solicitado un cambio de contraseña. Hemos generado una automáticamente. \n \n'
+			body = body + 'Tu nueva contraseña es: ' + new_pass
+
+			email_enviar = EmailMessage(
+				subject='Cambio de contraseña', 
+				body= body, 
+				to=[user.email])
+
+			email_enviar.send()
+			messages.info(request, "Hemos enviado tu nueva contraseña a tu cuenta de email")
+			
+			return HttpResponseRedirect('/recuperar')
+			
+	else:
+		form = RecoveryForm()
+	
+	return render_to_response('recovery.html', 
+		{'form': form},
+		context_instance=RequestContext(request))

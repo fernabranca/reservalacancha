@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^cancha/modificar/(?P<id_cancha>\d+)$', 'website.views.modificar_cancha'),
     url(r'^complejo/crear/$', 'website.views.crear_complejo'),
     url(r'^complejo/(?P<id_complejo>\d+)$', 'website.views.detalle_complejo'),
+    url(r'^recuperar/$', 'website.views.recovery'),
     #admin urls
     url(r'^admin/', include(admin.site.urls)),
     #auth urls

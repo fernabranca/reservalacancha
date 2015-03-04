@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Recuperar cuenta{% endblock title %}
+
+{% block body %}
+
+
+<div class="jumbotron">
+	<div class="container">
+		{% if messages %}
+ 
+	      {% for message in messages %}
+	        <div class="alert alert-info alert-dismissible" role="alert">
+	        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <strong>{{message}}</strong>
+	      </div>
+	      {% endfor %}
+
+  		{% endif %}
+		<h2>Recuperar cuenta</h2>
+		<h5>Ingresa tu nombre de usuario. Enviaremos un correo a la cuenta de email asociada con tu nueva contraseña.</h5>
+		<form class="form-horizontal" role="form" method="post" id="recoveryForm">
+			{% csrf_token %}
+			<div class="container col-sm-offset-3 col-sm-5">
+			{% load bootstrap %}
+			{{ form|bootstrap_horizontal }}
+			</div>
+		</form>
+
+
+	</div>
+</div>
+{% endblock body %}

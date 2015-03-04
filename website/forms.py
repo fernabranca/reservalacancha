@@ -49,3 +49,7 @@ class ComplejoForm(forms.ModelForm):
             'longitud': HiddenInput(),
             'duenio': HiddenInput()
          }
+
+class RecoveryForm(forms.Form):
+
+        usuario = forms.CharField()
