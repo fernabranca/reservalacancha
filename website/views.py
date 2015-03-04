@@ -1,3 +1,4 @@
+#encoding:utf-8
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from website.models import Deporte, Cancha, Reserva, Complejo
@@ -10,6 +11,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login 
 from django.contrib import messages
+from django.core.mail import EmailMessage
 
 #saber si un usuario es cliente
 def is_client(user):
@@ -120,8 +122,7 @@ def reserve(request):
 	estado = 'Pendiente de aprobacion'
 	cancha = get_object_or_404(Cancha, pk=id_cancha)
 	user = request.user
-	
-	messages.info(request, "Tu reserva fue realizada con exito")
+
 	reserva = Reserva(
 		hora=hora,
 		fecha=fecha,
@@ -130,7 +131,29 @@ def reserve(request):
 		usuario=user
 		)
 	reserva.save()
+	messages.info(request, "Tu reserva fue realizada con exito")
 
+	#aqui se envia un mail informando la reserva al propietario
+	body = 'Datos de la reserva:' + '\n'
+	body = body + 'Complejo: ' + reserva.cancha.complejo.nombre + '\n'
+	body = body + 'Deporte: ' + reserva.cancha.deporte.nombre + '\n'
+	body = body + 'Cancha: ' + str(reserva.cancha.numero_cancha) + '\n'
+	body = body + 'Fecha: ' + reserva.fecha.strftime('%d-%m-%Y')+ '\n'
+	body = body + 'Hora: ' + reserva.hora + ':00hs' '\n \n'
+	body = body + 'Datos del cliente: ' + '\n'
+	body = body + 'Nombre de usuario: ' + reserva.usuario.username + '\n'
+	body = body + 'Nombre: ' + reserva.usuario.first_name + '\n'
+	body = body + 'Apellido: ' + reserva.usuario.last_name + '\n'
+	body = body + 'Correo: ' + reserva.usuario.email + '\n'
+	
+	propietario = reserva.cancha.complejo.duenio
+	email_enviar = EmailMessage(
+		subject='¡Tienes una nueva reserva!', 
+		body= body, 
+		to=[propietario.email])
+
+	email_enviar.send()
+	
 	return redirect('/reservas')
 
 #visualizar reservas
@@ -153,6 +176,10 @@ def my_reserves_client(request):
 def moderate_reserve(request):
 	
 	user = request.user
+	#constantes de posibilidades de estado
+	cancelada = 'Cancelada por el Cliente'
+	rechazada = 'Rechazada por Propietario'
+	aprobada = 'Aprobada por el propietario'
 
 	if is_client(user) or is_propiertario(user):
 		id_reserva = request.POST.get('id_reserva', '-1')
@@ -160,6 +187,33 @@ def moderate_reserve(request):
 		reserva.estado = request.POST.get('estado')
 		reserva.save()
 		messages.info(request, "Haz cambiado el estado de la reserva exitosamente")
+
+		#se envia un mail informando del cambio de estado
+		body = 'Datos de la reserva:' + '\n'
+		body = body + 'Complejo: ' + reserva.cancha.complejo.nombre + '\n'
+		body = body + 'Deporte: ' + reserva.cancha.deporte.nombre + '\n'
+		body = body + 'Cancha: ' + str(reserva.cancha.numero_cancha) + '\n'
+		body = body + 'Fecha: ' + reserva.fecha.strftime('%d-%m-%Y')+ '\n'
+		body = body + 'Hora: ' + reserva.hora + ':00hs' '\n \n'
+
+		subject = 'Reserva ' + reserva.estado
+
+		if reserva.estado == rechazada or reserva.estado == aprobada:
+			to = reserva.usuario.email
+		else:
+			to = reserva.cancha.complejo.duenio.email
+			body = body + 'Datos del cliente: ' + '\n'
+			body = body + 'Nombre de usuario: ' + reserva.usuario.username + '\n'
+			body = body + 'Nombre: ' + reserva.usuario.first_name + '\n'
+			body = body + 'Apellido: ' + reserva.usuario.last_name + '\n'
+			body = body + 'Correo: ' + reserva.usuario.email + '\n'
+
+		email_enviar = EmailMessage(
+			subject=subject, 
+			body= body, 
+			to=[to])
+
+		email_enviar.send()
 
 	if is_client(user):
 		return redirect('/reservas')
