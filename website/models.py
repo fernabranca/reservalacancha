@@ -20,6 +20,7 @@ class Complejo(models.Model):
 	def __unicode__(self):
 		return self.nombre
 
+
 class Cancha(models.Model):
 
 	#tupla para manejar los horarios
